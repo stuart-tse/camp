@@ -12,7 +12,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 # define variable
 url = 'https://www.camping.gov.hk/tc/search.php'
-# url = 'file:///Users/stuarttse/Enjoy%20Camping%20-%20New%20Booking_files/Camp/page_source0.html'
 
 firefoxOption = webdriver.FirefoxOptions()
 firefoxOption.set_preference('permission.default.image', 2)
