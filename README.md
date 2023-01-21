@@ -24,6 +24,8 @@ This is a python script which attempts to automate the process of reserving site
 
 Copy checker_example.ini to checker.ini and edit all the fields as required. You must have a HKID # for each reservation that you are trying to make. See below the campsite ID
 
+[HK Government Campsite Map](https://www.camping.gov.hk/images/download/Campsite_map_Twisk_EN.jpg)
+
 Once you've edited the configuration file, open up a Terminal window in the directory containing this script and enter the command python ./main.py to run the script.
 
 Recommended use pattern is to begin the script shortly before reservations are due to open, with a low number of retries. Recreation.gov network usage is monitored and you risk account termination if you just leave this running all day.
