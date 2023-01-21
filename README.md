@@ -20,3 +20,12 @@ This is a python script which attempts to automate the process of reserving site
 
  + On OS X you can install the geckodriver using homebrew, like so: brew install geckodriver
 
+# Running the script
+
+Copy checker_example.ini to checker.ini and edit all the fields as required. You must have a HKID # for each reservation that you are trying to make. See below the campsite ID
+
+Once you've edited the configuration file, open up a Terminal window in the directory containing this script and enter the command python ./main.py to run the script.
+
+Recommended use pattern is to begin the script shortly before reservations are due to open, with a low number of retries. Recreation.gov network usage is monitored and you risk account termination if you just leave this running all day.
+
+Note: If you find, after playing with this script, that you have lots of Firefox windows open, you can kill them all on a Unix based platform with a command like $ killall firefox-bin.
