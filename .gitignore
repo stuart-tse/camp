@@ -152,4 +152,4 @@ cython_debug/
 #.idea/
 
 # Private Config
-checker.ini
+*.ini
