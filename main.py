@@ -14,9 +14,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 url = 'https://www.camping.gov.hk/tc/search.php'
 
 firefoxOption = webdriver.FirefoxOptions()
-firefoxOption.set_preference('permission.default.image', 2)
-firefoxOption.set_preference('browser.migration.version', 9001)
-firefoxOption.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
 firefoxOption.headless = True
 
 
@@ -28,7 +25,6 @@ def resource_path(relative_path):
 
 config = ConfigParser()
 config.read(resource_path('checker.ini'))
-
 sites = ast.literal_eval(config.get("common", "sites"))
 
 
@@ -49,12 +45,14 @@ def check_sites(driver):
             for item in site_list:
                 if item.text == str(desired_site):
                     item.click()
-                break
+                    break
+                else:
+                    return
     else:
         camp = driver.find_element(By.CSS_SELECTOR, ".ava-unit-wrapper > ul >li > a")
         camp.click()
 
-    driver.find_element(By.CSS_SELECTOR, ".bookingbtn")
+    driver.find_element(By.CSS_SELECTOR, ".bookingbtn").click()
     return True
 
 def disable_images(driver):
