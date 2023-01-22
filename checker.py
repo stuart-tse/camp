@@ -7,7 +7,7 @@ from configparser import ConfigParser
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -55,7 +55,6 @@ def check_errors(driver):
 
 
 def fill_in_form(driver):
-    driver.get(url)
     WebDriverWait(driver, 3).until(
         EC.presence_of_element_located((By.XPATH, "//input[@id='name']")))
     name = driver.find_element(By.XPATH, "//input[@id='name']")
@@ -96,8 +95,10 @@ def check_sites(driver):
                 WebDriverWait(driver, 5).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, ".ava-unit-wrapper > ul > li > a"))        )
                 site_list = driver.find_elements(By.CSS_SELECTOR, ".ava-unit-wrapper > ul >li > a")
-            except TimeoutError:
+            except TimeoutException:
+                error = 1
                 driver.quit()
+                return error
             else:
                 for item in site_list:
                     if item.text == str(desired_site):
@@ -138,41 +139,43 @@ def disclaimer_page(driver):
 
 
 def camp_date_page(driver):
-    WebDriverWait(driver, 60).until(
+    WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable(
             (By.XPATH, '/html/body/div[3]/div[2]/div[3]/div/div/form/div[1]/div[3]/div[1]/div[1]')))
     date_picker = driver.find_element(By.XPATH,
                                       '/html/body/div[3]/div[2]/div[3]/div/div/form/div[1]/div[3]/div[1]/div[1]')
     date_picker.click()
     try:
-        WebDriverWait(driver, 60).until(
+        WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable(
-                (By.XPATH, '//a[contains(@onclick,"2023-2-20")]')))
-    except TimeoutError:
+                (By.XPATH, '//a[contains(@onclick,"2023-2-21")]')))
+    except TimeoutException:
         driver.quit()
+        return True
     else:
-        driver.find_element(By.XPATH, "//a[contains(@onclick,'2023-2-20')]").click()
+        driver.find_element(By.XPATH, "//a[contains(@onclick,'2023-2-21')]").click()
         driver.find_element(By.XPATH, "/html/body/div[3]/div[2]/div[3]/div/div/form/div[2]/input[10]").click()
     time.sleep(2)
-    return True
+    return False
 
 
 def get_camp():
-    for i in range(2):
+    for i in range(retries):
         driver = webdriver.Firefox()
         disable_images(driver)
         driver.maximize_window()
         disclaimer_page(driver)
-        camp_date_page(driver)
-        check_sites(driver)
-        fill_in_form(driver)
+        date_error = camp_date_page(driver)
+        site_error = check_sites(driver) if not date_error else 0
+        form_error = fill_in_form(driver) if not date_error and not site_error else 0
 
-        page_source = driver.page_source
-        file_to_write = open(f"page_source{i}.html", "w")
-        file_to_write.write(page_source)
-        file_to_write.close()
-        print("Html Saved")
-        driver.quit()
+        if not site_error and not date_error and not form_error:
+            page_source = driver.page_source
+            file_to_write = open(f"page_source{i}.html", "w")
+            file_to_write.write(page_source)
+            file_to_write.close()
+            print("Html Saved")
+            driver.quit()
 
 
 if __name__ == '__main__':
