@@ -87,6 +87,7 @@ def check_sites(driver):
             EC.presence_of_element_located((By.CSS_SELECTOR, ".ava-unit-wrapper" + ">ul" + ">li")))
         for desired_site in sites:
             try:
+                desired_site = desired_site.strip()
                 WebDriverWait(driver, 5).until(
                     EC.element_to_be_clickable((By.CSS_SELECTOR, ".ava-unit-wrapper  ul  li")))
                 site_list = driver.find_elements(By.CSS_SELECTOR, ".ava-unit-wrapper ul li")
@@ -95,7 +96,7 @@ def check_sites(driver):
                 driver.quit()
                 return error
             for site in site_list:
-                print(site.text, desired_site)
+                site = site.strip()
                 if site.text == str(desired_site):
                     site.click()
                     sites = sites.remove(site)
