@@ -30,10 +30,6 @@ print(sites, type(sites))
 retries = ast.literal_eval(config.get("common", "retries"))
 no_of_camper = ast.literal_eval(config.get("reservation", "person"))
 no_of_reservations = ast.literal_eval(config.get("reservation", "no_of_reservations"))
-# registrant_name = ast.literal_eval(config.get("registrant", "name"))
-# registrant_id = ast.literal_eval(config.get("registrant", "id"))
-# registrant_email = ast.literal_eval(config.get("registrant", "email"))
-# registrant_phone = ast.literal_eval(config.get("registrant", "phone"))
 driver_list = []
 selected_camp = ""
 t_list = []
@@ -87,37 +83,31 @@ def check_sites(driver):
             EC.presence_of_element_located((By.CSS_SELECTOR, ".ava-unit-wrapper" + ">ul" + ">li")))
         for desired_site in sites:
             try:
-                desired_site = desired_site.strip()
                 WebDriverWait(driver, 5).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, ".ava-unit-wrapper  ul  li")))
+                    EC.presence_of_element_located((By.CSS_SELECTOR, ".ava-unit-wrapper  ul  li")))
                 site_list = driver.find_elements(By.CSS_SELECTOR, ".ava-unit-wrapper ul li")
             except TimeoutException:
-                error = True
                 driver.quit()
-                return error
+                return False
             for site in site_list:
-                site = site.strip()
-                if site.text == str(desired_site):
+                if site.text.strip() == str(desired_site):
                     site.click()
-                    sites = sites.remove(site)
                     print(f'No {site.text} Campsite is Clicked')
-                    return True
-
+                    sites.remove(desired_site)
+                    break
     else:
-
         # clicked the first campsite if the site list is null
         camp = WebDriverWait(driver, 3).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, ".ava-unit-wrapper" + ">ul" + ">li")))
         camp.click()
-        return True
-
+    print("me")
     # Scroll to the button to simulate human behaviour
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(3)
     WebDriverWait(driver, 5).until(
-        EC.presence_of_element_located(
+        EC.element_to_be_clickable(
             (By.CSS_SELECTOR, "div.unit-container.active > div.unit-button > form > input.bookingbtn"))).click()
-    return False
+    return True
 
 
 def disable_images(driver):
@@ -155,7 +145,6 @@ def camp_date_page(driver):
         driver.find_element(By.XPATH, "//a[contains(@onclick,'2023-2-23')]").click()
         driver.find_element(By.CSS_SELECTOR, "input.check-ava-btn").click()
 
-    take_screenshot(driver)
     time.sleep(2)
     return True
 
@@ -174,10 +163,11 @@ def get_camp(driver_no, outcome):
         disclaimer_ready = disclaimer_page(driver)
         date_ready = camp_date_page(driver) if disclaimer_ready else 0
         site_ready = check_sites(driver) if date_ready else 0
-        form_ready = fill_in_form(driver, driver_no) if date_ready and site_ready else 0
-
+        form_ready = fill_in_form(driver, driver_no) if site_ready else 0
+        time.sleep(2)
         if site_ready and date_ready and form_ready:
             take_screenshot(driver)
+            break
 
 
 if __name__ == '__main__':
