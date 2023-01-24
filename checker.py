@@ -43,13 +43,13 @@ url = 'https://www.camping.gov.hk/tc/search.php'
 # Fill the Registrant Form
 def fill_in_form(driver, driver_no):
     keys = ["name", "id", "email", "phone"]
-    vals = [config[f"registrant{driver_no}"][x] for x in keys]
+    vals = [config[f"registrant{driver_no}"][x].replace('"', '') for x in keys]
 
     try:
         WebDriverWait(driver, 3).until(
             EC.element_to_be_clickable((By.XPATH, "//input[@id='name']")))
-        name = driver.find_element(By.XPATH, "//input[@id='name']").click()
-        name.send_keys(vals[0])
+        time.sleep(0.5)
+        driver.find_element(By.XPATH, "//input[@id='name']").send_keys(vals[0])
         driver.find_element(By.XPATH, "//input[@id='identity']").send_keys(vals[1])
         driver.find_element(By.XPATH, "//input[@id='email']").send_keys(vals[2])
         driver.find_element(By.XPATH, "//input[@id='confirmEmail']").send_keys(vals[2])
@@ -67,6 +67,9 @@ def fill_in_form(driver, driver_no):
         WebDriverWait(driver, 20).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "div.recaptcha-checkbox-border"))).click()
         driver.find_element(By.CSS_SELECTOR, ".rc-anchor-center-container").click()
+        driver.find_element(By.CSS_SELECTOR, ".rc-anchor-center-container").click()
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "span.recaptcha-checkbox-checked")))
         driver.switch_to.default_content()
         time.sleep(3)
         driver.find_element(By.CSS_SELECTOR, ".bookingbtn").click()
@@ -164,10 +167,9 @@ def take_screenshot(driver):
 
 def get_camp(driver_no, outcome):
     for _ in range(retries):
-
         driver = webdriver.Firefox()
         disable_images(driver)
-        # driver.maximize_window()
+        driver.maximize_window()
         disclaimer_ready = disclaimer_page(driver)
         date_ready = camp_date_page(driver) if disclaimer_ready else 0
         site_ready = check_sites(driver) if date_ready else 0
