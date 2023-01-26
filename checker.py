@@ -29,6 +29,7 @@ sites = eval(config.get("common", "sites"))
 print(sites, type(sites))
 retries = ast.literal_eval(config.get("common", "retries"))
 no_of_camper = ast.literal_eval(config.get("reservation", "person"))
+checkin_date = ast.literal_eval(config.get("reservation", "checkin_date"))
 no_of_reservations = ast.literal_eval(config.get("reservation", "no_of_reservations"))
 driver_list = []
 selected_camp = ""
@@ -136,13 +137,13 @@ def camp_date_page(driver):
     try:
         WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable(
-                (By.XPATH, '//a[contains(@onclick,"2023-2-23")]')))
+                (By.XPATH, f"//a[contains(@onclick,'{checkin_date}']")))
     except TimeoutException:
         take_screenshot(driver)
         driver.quit()
         return False
     else:
-        driver.find_element(By.XPATH, "//a[contains(@onclick,'2023-2-23')]").click()
+        driver.find_element(By.XPATH, f"//a[contains(@onclick,'{checkin_date}')]").click()
         driver.find_element(By.CSS_SELECTOR, "input.check-ava-btn").click()
 
     time.sleep(2)
