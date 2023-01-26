@@ -22,7 +22,7 @@ This is a python script which attempts to automate the process of reserving site
 
 # Running the script
 
-Copy checker_example.ini to checker.ini and edit all the fields as required. You must have a HKID # for each reservation that you are trying to make. See below the campsite ID
+Copy checker-sample.ini to checker.ini and edit all the fields as required. You must have a HKID # for each reservation that you are trying to make. See below the campsite ID
 
 [HK Government Campsite Map](https://www.camping.gov.hk/images/download/Campsite_map_Twisk_EN.jpg)
 
@@ -37,7 +37,7 @@ Note: If you find, after playing with this script, that you have lots of Firefox
 Recommend trying to use a low number of reservation as be considerate to other campers. Each reservation are required to fill with details in the ini file. 
 [Registrant1], [Registrant2] ... etc. 
 
-# checkin Date format
+# Checkin Date Format
 the date format will be like "2023-2-1" omit all the 0 in between month and date
 
 I only make this as i found it is very diffcult to book the camp during weekend as a lot of script/bot are competiting with us.
