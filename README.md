@@ -28,6 +28,16 @@ Copy checker_example.ini to checker.ini and edit all the fields as required. You
 
 Once you've edited the configuration file, open up a Terminal window in the directory containing this script and enter the command python ./main.py to run the script.
 
-Recommended use pattern is to begin the script shortly before reservations are due to open, with a low number of retries. Recreation.gov network usage is monitored and you risk account termination if you just leave this running all day.
+Recommended use pattern is to begin the script shortly before reservations are due to open, with a low number of retries. camping.gov.hk network usage is monitored and you risk account ban if you just leave this running all day.
 
 Note: If you find, after playing with this script, that you have lots of Firefox windows open, you can kill them all on a Unix based platform with a command like $ killall firefox-bin.
+
+# Number of Reservation
+
+Recommend trying to use a low number of reservation as be considerate to other campers. Each reservation are required to fill with details in the ini file. 
+[Registrant1], [Registrant2] ... etc. 
+
+# checkin Date format
+the date format will be like "2023-2-1" omit all the 0 in between month and date
+
+I only make this as i found it is very diffcult to book the camp during weekend as a lot of script/bot are competiting with us.
